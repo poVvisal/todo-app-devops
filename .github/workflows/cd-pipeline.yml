@@ -46,6 +46,8 @@ jobs:
 
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Authenticate for Docker Hub
         id: docker-auth
@@ -67,19 +69,21 @@ jobs:
         if: github.event_name == 'release' && github.event.action == 'published' && github.event.release.target_commitish == 'main'
         run: |
           gcloud run deploy ${{vars.GCR_PROJECT_NAME}} \
+          --project ${{secrets.GCP_PROJECT_ID}} \
           --region ${{vars.GCR_REGION}} \
           --image ${{env.IMAGE}} \
           --platform "managed" \
           --allow-unauthenticated \
-          --tag production \
+          --tag production
       - name: Deploy to GCP Run - Staging environment
         if: github.ref != 'refs/heads/main'
         run: |
           echo "Deploying to staging environment"
           # Deploy service with to staging environment
           gcloud run deploy ${{vars.GCR_STAGING_PROJECT_NAME}} \
+          --project ${{secrets.GCP_PROJECT_ID}} \
           --region ${{vars.GCR_REGION}} \
           --image ${{env.IMAGE}} \
           --platform "managed" \
           --allow-unauthenticated \
-          --tag staging \
+          --tag staging
