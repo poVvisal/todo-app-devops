@@ -31,14 +31,14 @@ jobs:
       - name: Test frontend
         run: cd frontend && npm test -- --watchAll=false --passWithNoTests
   build:
-    needs: test
+    needs: test 
     runs-on: ubuntu-latest
     name: Setup project, Authorize GitHub Actions to GCP and Docker Hub, and deploy
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Authenticate for GCP
+      - name: Authenticate for GCP cloud run deployment
         id: gcp-auth
         uses: google-github-actions/auth@v0
         with:
